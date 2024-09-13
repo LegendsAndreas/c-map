@@ -3,7 +3,6 @@
 #include <limits>
 #include <fstream>
 #include <windows.h>
-#include <direct.h>
 
 using namespace std;
 
