@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/Users/A/Desktop/Coding/C programming/c_map/cmake-build-debug",
-		"source" : "C:/Users/A/Desktop/Coding/C programming/c_map"
+		"build" : "C:/Users/andre/Desktop/c_map/c_map/cmake-build-debug",
+		"source" : "C:/Users/andre/Desktop/c_map/c_map"
 	},
 	"version" : 
 	{
