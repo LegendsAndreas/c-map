@@ -5,10 +5,10 @@
 typedef struct {
     char key[256];
     int value;
-}mapValue;
+}mapSample;
 
 typedef struct {
-    mapValue mapList[256];
+    mapSample mapList[256];
     int size;
 }map;
 
@@ -23,8 +23,8 @@ void popKey(const char *key, map persons[MAP_LENGTH]);
 int main(void) {
     // We HAVE to use dynamic memory, as to not overload the stack memory, since the stack is relatively small.
     /* Memory size:
-     * mapValue: char key[256] = 256 bytes, int value = 4 bytes, key+value = 260.
-     * map: mapValue mapList[256] = 256*mapValue = 256*260 = 66560 bytes, int size = 4 bytes, mapValue+size = 66564.
+     * mapSample: char key[256] = 256 bytes, int value = 4 bytes, key+value = 260.
+     * map: mapSample mapList[256] = 256*mapSample = 256*260 = 66560 bytes, int size = 4 bytes, mapSample+size = 66564.
      * So, we allocate 65564 bytes for the persons variable.
     */
     map *persons = (map *)malloc(sizeof(map));
@@ -34,13 +34,17 @@ int main(void) {
     }
     persons->size = 0;
 
+    // Used for determining what the user wants to do.
     char input[MAP_LENGTH];
-    // We use a buffer, since a pointer has to be pointing at something.
+
+    // The key to be added to a map. We use a buffer, since a pointer has to be pointing at something.
     char keyBuffer[MAP_LENGTH];
     char *key = keyBuffer;
 
+    // The value to be added to the map with the corresponding key.
+    // Garbage is used for the function "strtol", where in case there are characters that are not numbers, will be put in garbage.
     int value;
-    char *garbage; // Used for the function "strtol", where in case there are characters that are not numbers, will be put here.
+    char *garbage;
 
     while (true)
     {
@@ -103,16 +107,16 @@ int main(void) {
 }
 
 /**
- * Adds a key-value pair to the mapValue if the key does not already exist.
+ * Adds a key-value pair to the mapSample if the key does not already exist.
  *
- * This function checks if the provided key exists in the mapValue. If the key
+ * This function checks if the provided key exists in the mapSample. If the key
  * is found, the associated value is updated and the function returns. If the key
- * is not found, the key-value pair is added to the mapValue and the size of the mapValue is incremented.
+ * is not found, the key-value pair is added to the mapSample and the size of the mapSample is incremented.
  *
  * @param key A constant character pointer representing the key to be added or updated.
  * @param value An integer value to be associated with the key.
- * @param persons An array of mapValue structures where the key-value pair is to be added.
- * @param size A pointer to an integer representing the current number of elements in the mapValue.
+ * @param persons An array of mapSample structures where the key-value pair is to be added.
+ * @param size A pointer to an integer representing the current number of elements in the mapSample.
  *             This value is incremented if a new key-value pair is added.
  */
 void addToMap(const char *key, int value, map persons[MAP_LENGTH]) {
@@ -124,7 +128,7 @@ void addToMap(const char *key, int value, map persons[MAP_LENGTH]) {
         printf("Key existed\n");
         return;
     }
-        // We add the key if it does not exist.
+    // We add the key if it does not exist.
     else
     {
         strcpy(persons->mapList[size].key, key);
@@ -135,15 +139,15 @@ void addToMap(const char *key, int value, map persons[MAP_LENGTH]) {
 }
 
 /**
-* Checks whether a given key exists within an array of mapValue structures.
+* Checks whether a given key exists within an array of mapSample structures.
 *
-* This function searches through the provided array of mapValue structures
+* This function searches through the provided array of mapSample structures
 * to determine if a specified key is present. If the key is found,
-* the value of the corresponding mapValue structure is updated to the provided value.
+* the value of the corresponding mapSample structure is updated to the provided value.
 *
 * @param key A constant character pointer that represents the key to search for.
 * @param value An integer to set as the new value if the key is found.
-* @param persons An array of mapValue structures where the search is performed.
+* @param persons An array of mapSample structures where the search is performed.
 * @param size An integer representing the number of elements in the persons array.
 * @return A boolean value, true if the key is found, otherwise false.
 */
@@ -168,14 +172,14 @@ bool doesKeyExist(const char *key, const int value, map persons[MAP_LENGTH]) {
 }
 
 /**
- * @brief Prints the entire mapValue excluding empty entries.
+ * @brief Prints the entire mapSample excluding empty entries.
  *
- * This function iterates through a mapValue array and prints the index, key, and value
+ * This function iterates through a mapSample array and prints the index, key, and value
  * of each non-empty entry. An entry is considered non-empty if its key is not an
  * empty string.
  *
- * @param persons Array of `mapValue` structures containing key-value pairs.
- * @param size Pointer to an integer representing the size of the mapValue array.
+ * @param persons Array of `mapSample` structures containing key-value pairs.
+ * @param size Pointer to an integer representing the size of the mapSample array.
  */
 void printEntireMap(const map persons[MAP_LENGTH]) {
     int size = persons->size;
@@ -191,13 +195,13 @@ void printEntireMap(const map persons[MAP_LENGTH]) {
 /**
  * @brief Prints the value associated with a specific key in an array of maps.
  *
- * This function searches through an array of mapValue structures to find a specific key.
+ * This function searches through an array of mapSample structures to find a specific key.
  * If the key is found, it prints the key and its associated value.
  * If the key is not found, it prints "Key not found".
  *
  * @param key The key to search for within the array of maps.
- * @param persons An array of mapValue structures where each structure contains a key-value pair.
- * @param size The size of the mapValue array.
+ * @param persons An array of mapSample structures where each structure contains a key-value pair.
+ * @param size The size of the mapSample array.
  */
 void printMapKey(const char *key, const map persons[MAP_LENGTH]) {
     int size = persons->size;
@@ -221,11 +225,11 @@ void printMapKey(const char *key, const map persons[MAP_LENGTH]) {
 * Removes the entry with the specified key from the array of maps.
 *
 * This function searches for the entry with the given key in the
-* array of mapValue elements and removes it by shifting subsequent elements
+* array of mapSample elements and removes it by shifting subsequent elements
 * one position to the left. The size of the array is then decreased by one.
 *
 * @param key The key of the entry to be removed.
-* @param persons The array of mapValue elements from which the entry should be removed.
+* @param persons The array of mapSample elements from which the entry should be removed.
 * @param size A pointer to the size of the array, which will be updated upon removal.
 */
 void popKey(const char *key, map persons[MAP_LENGTH]){
